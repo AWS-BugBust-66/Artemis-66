@@ -950,6 +950,7 @@ public class ProgrammingExerciseResource {
         }
 
         if (repositoryExportOptions.getFilterLateSubmissionsDate() == null) {
+            repositoryExportOptions.setFilterLateSubmissionsIndividualDueDate(true);
             repositoryExportOptions.setFilterLateSubmissionsDate(programmingExercise.getDueDate());
         }
 
@@ -994,6 +995,7 @@ public class ProgrammingExerciseResource {
         }
 
         if (repositoryExportOptions.getFilterLateSubmissionsDate() == null) {
+            repositoryExportOptions.setFilterLateSubmissionsIndividualDueDate(true);
             repositoryExportOptions.setFilterLateSubmissionsDate(programmingExercise.getDueDate());
         }
 
