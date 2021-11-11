@@ -10,6 +10,7 @@ import { ParticipationComponent } from 'app/exercises/shared/participation/parti
 import { ArtemisExerciseScoresModule } from 'app/exercises/shared/exercise-scores/exercise-scores.module';
 import { ArtemisParticipationRoutingModule } from 'app/exercises/shared/participation/participation-routing.module';
 import { ArtemisTeamModule } from 'app/exercises/shared/team/team.module';
+import { FormDateTimePickerModule } from 'app/shared/date-time-picker/date-time-picker.module';
 
 @NgModule({
     imports: [
@@ -22,6 +23,7 @@ import { ArtemisTeamModule } from 'app/exercises/shared/team/team.module';
         ArtemisDataTableModule,
         FeatureToggleModule,
         ArtemisTeamModule,
+        FormDateTimePickerModule,
     ],
     declarations: [ParticipationComponent],
 })
