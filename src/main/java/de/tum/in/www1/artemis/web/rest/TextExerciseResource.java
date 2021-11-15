@@ -77,6 +77,8 @@ public class TextExerciseResource {
 
     private final StudentParticipationRepository studentParticipationRepository;
 
+    private final ParticipationRepository participationRepository;
+
     private final ResultRepository resultRepository;
 
     private final ExampleSubmissionRepository exampleSubmissionRepository;
@@ -97,11 +99,11 @@ public class TextExerciseResource {
 
     public TextExerciseResource(TextExerciseRepository textExerciseRepository, TextExerciseService textExerciseService, FeedbackRepository feedbackRepository,
             PlagiarismResultRepository plagiarismResultRepository, UserRepository userRepository, AuthorizationCheckService authCheckService, CourseService courseService,
-            StudentParticipationRepository studentParticipationRepository, ResultRepository resultRepository, GroupNotificationService groupNotificationService,
-            TextExerciseImportService textExerciseImportService, TextSubmissionExportService textSubmissionExportService, ExampleSubmissionRepository exampleSubmissionRepository,
-            ExerciseService exerciseService, GradingCriterionRepository gradingCriterionRepository, TextBlockRepository textBlockRepository,
-            ExerciseGroupRepository exerciseGroupRepository, InstanceMessageSendService instanceMessageSendService, TextPlagiarismDetectionService textPlagiarismDetectionService,
-            CourseRepository courseRepository, TextAssessmentKnowledgeService textAssessmentKnowledgeService) {
+            StudentParticipationRepository studentParticipationRepository, ParticipationRepository participationRepository, ResultRepository resultRepository,
+            GroupNotificationService groupNotificationService, TextExerciseImportService textExerciseImportService, TextSubmissionExportService textSubmissionExportService,
+            ExampleSubmissionRepository exampleSubmissionRepository, ExerciseService exerciseService, GradingCriterionRepository gradingCriterionRepository,
+            TextBlockRepository textBlockRepository, ExerciseGroupRepository exerciseGroupRepository, InstanceMessageSendService instanceMessageSendService,
+            TextPlagiarismDetectionService textPlagiarismDetectionService, CourseRepository courseRepository, TextAssessmentKnowledgeService textAssessmentKnowledgeService) {
         this.feedbackRepository = feedbackRepository;
         this.plagiarismResultRepository = plagiarismResultRepository;
         this.textBlockRepository = textBlockRepository;
@@ -111,6 +113,7 @@ public class TextExerciseResource {
         this.courseService = courseService;
         this.authCheckService = authCheckService;
         this.studentParticipationRepository = studentParticipationRepository;
+        this.participationRepository = participationRepository;
         this.resultRepository = resultRepository;
         this.textExerciseImportService = textExerciseImportService;
         this.textSubmissionExportService = textSubmissionExportService;
@@ -222,6 +225,8 @@ public class TextExerciseResource {
         TextExercise updatedTextExercise = textExerciseRepository.save(textExercise);
         exerciseService.logUpdate(updatedTextExercise, updatedTextExercise.getCourseViaExerciseGroupOrCourseMember(), user);
         exerciseService.updatePointsInRelatedParticipantScores(textExerciseBeforeUpdate, updatedTextExercise);
+
+        participationRepository.removeIndividualDueDatesIfBeforeDueDate(updatedTextExercise, textExerciseBeforeUpdate.getDueDate());
 
         instanceMessageSendService.sendTextExerciseSchedule(updatedTextExercise.getId());
 

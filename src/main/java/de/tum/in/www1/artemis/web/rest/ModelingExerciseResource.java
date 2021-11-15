@@ -52,6 +52,8 @@ public class ModelingExerciseResource {
 
     private final CourseRepository courseRepository;
 
+    private final ParticipationRepository participationRepository;
+
     private final AuthorizationCheckService authCheckService;
 
     private final ModelingExerciseService modelingExerciseService;
@@ -81,11 +83,12 @@ public class ModelingExerciseResource {
     private final ModelAssessmentKnowledgeService modelAssessmentKnowledgeService;
 
     public ModelingExerciseResource(ModelingExerciseRepository modelingExerciseRepository, UserRepository userRepository, AuthorizationCheckService authCheckService,
-            CourseRepository courseRepository, ModelingExerciseService modelingExerciseService, PlagiarismResultRepository plagiarismResultRepository,
-            ModelingExerciseImportService modelingExerciseImportService, SubmissionExportService modelingSubmissionExportService, GroupNotificationService groupNotificationService,
-            CompassService compassService, ExerciseService exerciseService, GradingCriterionRepository gradingCriterionRepository,
-            ModelingPlagiarismDetectionService modelingPlagiarismDetectionService, ExampleSubmissionRepository exampleSubmissionRepository,
-            InstanceMessageSendService instanceMessageSendService, ModelClusterRepository modelClusterRepository, ModelAssessmentKnowledgeService modelAssessmentKnowledgeService) {
+            CourseRepository courseRepository, ParticipationRepository participationRepository, ModelingExerciseService modelingExerciseService,
+            PlagiarismResultRepository plagiarismResultRepository, ModelingExerciseImportService modelingExerciseImportService,
+            SubmissionExportService modelingSubmissionExportService, GroupNotificationService groupNotificationService, CompassService compassService,
+            ExerciseService exerciseService, GradingCriterionRepository gradingCriterionRepository, ModelingPlagiarismDetectionService modelingPlagiarismDetectionService,
+            ExampleSubmissionRepository exampleSubmissionRepository, InstanceMessageSendService instanceMessageSendService, ModelClusterRepository modelClusterRepository,
+            ModelAssessmentKnowledgeService modelAssessmentKnowledgeService) {
         this.modelingExerciseRepository = modelingExerciseRepository;
         this.modelingExerciseService = modelingExerciseService;
         this.plagiarismResultRepository = plagiarismResultRepository;
@@ -93,6 +96,7 @@ public class ModelingExerciseResource {
         this.modelingSubmissionExportService = modelingSubmissionExportService;
         this.userRepository = userRepository;
         this.courseRepository = courseRepository;
+        this.participationRepository = participationRepository;
         this.authCheckService = authCheckService;
         this.compassService = compassService;
         this.groupNotificationService = groupNotificationService;
@@ -200,6 +204,8 @@ public class ModelingExerciseResource {
             updatedModelingExercise.getExampleSubmissions().forEach(exampleSubmission -> exampleSubmission.setExercise(null));
             updatedModelingExercise.getExampleSubmissions().forEach(exampleSubmission -> exampleSubmission.setTutorParticipations(null));
         }
+
+        participationRepository.removeIndividualDueDatesIfBeforeDueDate(updatedModelingExercise, modelingExerciseBeforeUpdate.getDueDate());
 
         modelingExerciseService.scheduleOperations(updatedModelingExercise.getId());
 
